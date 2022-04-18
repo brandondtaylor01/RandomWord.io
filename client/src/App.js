@@ -1,47 +1,59 @@
-import { createTheme, ThemeProvider } from "@mui/system";
+import React, { useState, useMemo } from "react";
+import { ThemeProvider } from "@emotion/react";
+import { Box, CssBaseline } from "@mui/material";
+import { createTheme } from "@mui/material/styles";
+import Toolbar from "./Components/Toolbar";
+import WordContainer from './Components/WordContainer';
 
 function App() {
+  const [themeMode, setThemeMode] = useState('dark');
 
-  const darkTheme = prefersDarkTheme();
-
-  // build our app's theme.
-  // this uses an immediately invoked function because the ThemeProvider below shouldn't take a prop function
-  // and we only want the return value of the "createTheme" function call.
-  const theme = (() => {
-    return darkTheme
-      ? createTheme({
-        fontFamily: [
-          'Roboto',
-          'sans-serif',
-        ].join(',')
-      })
-      
-      : createTheme({
-        palette: {
-          mode: 'dark'
+  /**
+   * Returns a palette object depending on it the mode is 'light' or 'dark'.
+   * @param mode - 'light' or 'dark'
+   * @returns an object.
+   */
+  const getDesignTokens = (mode) => {
+    let darkMode = {
+      palette: {
+        background: {
+          default: '#212121'
         },
-        fontFamily: [
-          'Roboto',
-          'sans-serif',
-        ].join(',')
-      });
-  })();
+        primary: {
+          main: '#333f4d',
+        }
+      }
+    }
 
+    let lightMode = {
+      palette: {
+        background: {
+          default: '#e0e0e0'
+        },
+        primary: {
+          main: '#333f4d',
+        }
+      }
+    }
+
+    return mode === 'dark' ? darkMode : lightMode;
+  }
+
+  const theme = useMemo(() => createTheme(getDesignTokens(themeMode)), [themeMode]);
+
+  function toggleThemeMode() {
+    setThemeMode((prev) => prev === 'dark' ? 'light' : 'dark');
+  }
+  
   return (
     <ThemeProvider theme={theme}>
-      <div className="app">
-        <h1>Hello, world!</h1>
-      </div>
+      <CssBaseline />
+      <Box>
+        <Toolbar toggleThemeMode={toggleThemeMode} themeMode={themeMode} />
+        <WordContainer />
+      </Box>
     </ThemeProvider>
   );
-}
-
-/**
- * The function uses the prefers-color-scheme media query to determine if the user prefers a dark theme
- * @returns A boolean value.
- */
-function prefersDarkTheme() {
-  return window.matchMedia("(prefers-color-scheme: dark)")?.matches;
 }
 
 export default App;
