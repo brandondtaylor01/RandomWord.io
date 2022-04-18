@@ -28,10 +28,10 @@ function App() {
     let lightMode = {
       palette: {
         background: {
-          default: '#e0e0e0'
+          default: '#fff'
         },
         primary: {
-          main: '#333f4d',
+          main: '#2196f3',
         }
       }
     }
