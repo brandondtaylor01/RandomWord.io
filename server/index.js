@@ -3,14 +3,27 @@ const process = require('process');
 const express = require('express');
 const cors    = require('cors');
 const fs      = require('fs');
-const http    = require('http');
 const https   = require('https');
+const session = require('cookie-session');
 const app     = express();
 
 // middleware
+
+// we accept connections from anywhere.
 app.use(cors({
   origin: '*'
 }));
+
+// prevent cookie theft.
+app.use(
+  session({
+    secret: process.env.COOKIE_SECRET,
+    httpOnly: true,
+    secure: true
+  })
+);
+
+// ensure that the request bodies are nice and formatted.
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
@@ -60,15 +73,26 @@ loadDictionary().then((data) => {
 
   console.log('Dictionary loaded.')
 
+  let ssl = (process.env.SSL.toLowerCase() === 'true' || process.env.SSL === true);
+
   // if SSL is enabled.
-  if(Boolean(process.env.SSL)) {
-    return https.createServer(app).listen(Number(process.env.PORT) || 8443, () => {
-      console.log('Secure server started on port', Number(process.env.PORT) || 8443);
+  if(ssl) {
+  
+    var options = {
+      key: fs.readFileSync(process.env.PRIVKEY),
+      cert: fs.readFileSync(process.env.FULLCHAIN),
+    };
+    
+    // setup the HTTPS server.
+    https.createServer(options, app).listen(process.env.PORT, () =>{
+      console.log('Secure server started on port', process.env.PORT);
     });
+
+    return;
   }
 
-  // SSL is not enabled, start insecure server.
-  return http.createServer(app).listen(Number(process.env.PORT) || 8080, () => {
-    console.log('Insecure started on port', Number(process.env.PORT) || 8080);
-  })
+  // start the insure server.
+  app.listen(process.env.PORT, () => {
+    console.log('Insecure server started on port', process.env.PORT);
+  });
 });

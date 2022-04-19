@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, ButtonGroup, Button, Typography } from "@mui/material";
+import { Box, ButtonGroup, Button } from "@mui/material";
 import ShuffleIcon from '@mui/icons-material/Shuffle';
 import Word from "../Word";
 
@@ -7,12 +7,14 @@ export default function WordContainer() {
   const [word, setWord] = useState('');
 
   function handleShuffle() {
-    fetch( 'http://localhost:7777/get-word').then(res => res.json()).then(res => {
+    fetch( 'https://www.randomword.io:7777/get-word').then(res => res.json()).then(res => {
       if(res?.success) {
         if(typeof res.word !== 'undefined') {
           setWord(res.word);
         }
       }
+    }).catch(err => {
+      console.log(err);
     })
   }
 
@@ -26,12 +28,13 @@ export default function WordContainer() {
     >
       <Box
         height='200px'
+        width='100%'
         display='flex'
         justifyContent='center'
         alignItems='center'
       >
         <Word>
-          <Typography variant='h2'>{word}</Typography>
+          {word}
         </Word>
       </Box>
       <Box sx={{marginTop: '16px'}}>
