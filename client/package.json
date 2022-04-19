@@ -5,6 +5,7 @@
   "author": "Brandon Taylor",
   "license": "MIT",
   "private": true,
+  "homepage": "https://www.randomword.io",
   "dependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
