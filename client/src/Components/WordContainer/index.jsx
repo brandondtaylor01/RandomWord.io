@@ -1,18 +1,19 @@
 import { useState } from 'react';
-import { Box, ButtonGroup, Button, CircularProgress, } from "@mui/material";
+import { Box, ButtonGroup, Button, Typography } from "@mui/material";
 import ShuffleIcon from '@mui/icons-material/Shuffle';
 import Word from "../Word";
 
 export default function WordContainer() {
-  const [word,    setWord]    = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [word, setWord] = useState('');
 
   function handleShuffle() {
-    setLoading(!loading);
-    setWord(<CircularProgress fontSize="large" />);
-    setTimeout(() => {
-      setWord('Test!')
-    }, 1500)
+    fetch( 'http://localhost:7777/get-word').then(res => res.json()).then(res => {
+      if(res?.success) {
+        if(typeof res.word !== 'undefined') {
+          setWord(res.word);
+        }
+      }
+    })
   }
 
   return(
@@ -23,8 +24,10 @@ export default function WordContainer() {
       alignItems='center'
       height='100vh'
     >
-      <Word word={word} />
-      <Box>
+      <Word>
+        <Typography variant='h2'>{word}</Typography>
+      </Word>
+      <Box sx={{marginTop: '16px'}}>
         <ButtonGroup variant="contained">
           <Button onClick={handleShuffle}>
               <ShuffleIcon fontSize='large' />

@@ -16,6 +16,7 @@ function App() {
   const getDesignTokens = (mode) => {
     let darkMode = {
       palette: {
+        mode: 'dark',
         background: {
           default: '#212121'
         },
@@ -27,6 +28,7 @@ function App() {
 
     let lightMode = {
       palette: {
+        mode: 'light',
         background: {
           default: '#fff'
         },
