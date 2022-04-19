@@ -24,9 +24,16 @@ export default function WordContainer() {
       alignItems='center'
       height='100vh'
     >
-      <Word>
-        <Typography variant='h2'>{word}</Typography>
-      </Word>
+      <Box
+        height='200px'
+        display='flex'
+        justifyContent='center'
+        alignItems='center'
+      >
+        <Word>
+          <Typography variant='h2'>{word}</Typography>
+        </Word>
+      </Box>
       <Box sx={{marginTop: '16px'}}>
         <ButtonGroup variant="contained">
           <Button onClick={handleShuffle}>
