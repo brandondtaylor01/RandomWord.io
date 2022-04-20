@@ -49,7 +49,7 @@ export default function WordContainer() {
         recentWords.shift(); // remove the first item in the list.
       }
 
-      setCookie('randomwordio_recentwords', recentWords, { path: '/' });
+      setCookie('randomwordio_recentwords', recentWords, { path: '/', sameSite: 'strict', secure: true });
       setWord(res);
 
       // set lock timeout.
