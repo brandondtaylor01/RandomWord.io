@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
 import { Box, ButtonGroup, Button } from "@mui/material";
 import ShuffleIcon from '@mui/icons-material/Shuffle';
+import RestoreIcon from '@mui/icons-material/Restore';
 import Word from "../Word";
 
 export default function WordContainer() {
+  const [cookies, setCookie, removeCookie] = useCookies(['randomwordio_recentwords']);
   const [word, setWord] = useState();
   const [locked, setLocked] = useState(false);
 
@@ -24,23 +27,43 @@ export default function WordContainer() {
     });
   }
 
-
   const getWord = useCallback(() => {
 
+    // lock the shuffle button.
     setLocked(true);
 
     // fetch the word and update the state.
     fetchWord().then(res => {
+
+      // get a copy of the words.
+      let recentWords = cookies.randomwordio_recentwords;
+
+      // if undefined, create an array, else, add to the array.
+      if(typeof recentWords === 'undefined') {
+        recentWords = [res];
+      } else {
+        recentWords = [...recentWords, res];
+      }
+
+      // trim as necessary.
+      if(recentWords.length > 10) {
+        recentWords.shift(); // remove the first item in the list.
+      }
+
+      setCookie('randomwordio_recentwords', recentWords, { path: '/' });
+      console.log(recentWords);
       setWord(res);
 
       // set lock timeout.
       setTimeout(() => {
+
+        // unlock the shuffle button.
         setLocked(false);
       }, 1500);
     }).catch(err => {
       console.log(err);
     });
-  }, [])
+  }, [cookies, setCookie])
 
   function handleShuffle() {
 
@@ -49,6 +72,10 @@ export default function WordContainer() {
     if(!locked) {
       getWord();
     }
+  }
+
+  function showRecentWordsMenu() {
+
   }
 
   // Lifecycle
@@ -80,9 +107,12 @@ export default function WordContainer() {
       </Box>
       <Box sx={{marginTop: '16px'}}>
         <ButtonGroup variant="contained">
+          <Button onClick={showRecentWordsMenu}>
+            <RestoreIcon fontSize='large' />
+          </Button>
           <Button onClick={handleShuffle} disabled={locked}>
-              <ShuffleIcon fontSize='large' />
-            </Button>
+            <ShuffleIcon fontSize='large' />
+          </Button>
         </ButtonGroup>
       </Box>
     </Box>

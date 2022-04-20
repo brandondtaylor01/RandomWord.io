@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { ThemeProvider } from "@emotion/react";
 import { Box, CssBaseline } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
+import { CookiesProvider } from 'react-cookie';
 import Toolbar from "./Components/Toolbar";
 import WordContainer from './Components/WordContainer';
 
@@ -48,13 +49,15 @@ function App() {
   }
   
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box>
-        <Toolbar toggleThemeMode={toggleThemeMode} themeMode={themeMode} />
-        <WordContainer />
-      </Box>
-    </ThemeProvider>
+    <CookiesProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Box>
+          <Toolbar toggleThemeMode={toggleThemeMode} themeMode={themeMode} />
+          <WordContainer />
+        </Box>
+      </ThemeProvider>
+    </CookiesProvider>
   );
 }
 
