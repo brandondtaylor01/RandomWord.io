@@ -1,14 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
-import { Box, ButtonGroup, Button } from "@mui/material";
+import { Box, ButtonGroup, Button, Typography, Fade } from "@mui/material";
+import CircularProgress from '@mui/material/CircularProgress';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
-import RestoreIcon from '@mui/icons-material/Restore';
-import Word from "../Word";
 
 export default function WordContainer() {
-  const [cookies, setCookie, removeCookie] = useCookies(['randomwordio_recentwords']);
+  const [cookies, setCookie] = useCookies(['randomwordio_recentwords']);
   const [word, setWord] = useState();
-  const [locked, setLocked] = useState(false);
+  const [locked, setLocked] = useState(true);
 
   function fetchWord() {
     return new Promise((resolve, reject) => {
@@ -51,7 +50,6 @@ export default function WordContainer() {
       }
 
       setCookie('randomwordio_recentwords', recentWords, { path: '/' });
-      console.log(recentWords);
       setWord(res);
 
       // set lock timeout.
@@ -74,15 +72,13 @@ export default function WordContainer() {
     }
   }
 
-  function showRecentWordsMenu() {
-
-  }
-
   // Lifecycle
   // Run-once to setup the initial word.
   useEffect(() => {
     if(word === '' || typeof word === 'undefined') {
-      getWord();
+      setTimeout(() => {
+        getWord();
+      }, 1500);
     }
   }, [word, getWord]);
 
@@ -101,16 +97,20 @@ export default function WordContainer() {
         justifyContent='center'
         alignItems='center'
       >
-        <Word>
-          {word}
-        </Word>
+        <Box>
+          {locked &&
+            <CircularProgress color="inherit" />
+          }
+          {!locked &&
+            <Fade in={!locked} timeout={500}>
+              <Typography sx={{fontSize: 'calc(4vw + 4vh + 2vmin)'}}>{word}</Typography>
+            </Fade>
+          }
+        </Box>
       </Box>
       <Box sx={{marginTop: '16px'}}>
         <ButtonGroup variant="contained">
-          <Button onClick={showRecentWordsMenu}>
-            <RestoreIcon fontSize='large' />
-          </Button>
-          <Button onClick={handleShuffle} disabled={locked}>
+          <Button onClick={handleShuffle} disabled={locked} sx={{width: '75px', height: '50px'}}>
             <ShuffleIcon fontSize='large' />
           </Button>
         </ButtonGroup>
