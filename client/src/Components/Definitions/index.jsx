@@ -7,7 +7,7 @@ export default function Definitions({ list, capitalize }) {
       list.meanings.map((def, index) => {
         return(
           <Box key={index} sx={{display: 'flex', flexDirection: 'row', marginBottom: '32px'}}>
-            <Box sx={{marginRight: '32px', maxWidth: '300px'}}>
+            <Box sx={{marginRight: '32px', width: '75px', textAlign: 'end' }}>
               <Typography variant='h5'>{capitalize(def.partOfSpeech)}</Typography>
             </Box>
 
