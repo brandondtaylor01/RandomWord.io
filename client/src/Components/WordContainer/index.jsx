@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { Box, ButtonGroup, Button, Typography, Fade } from "@mui/material";
-import CircularProgress from '@mui/material/CircularProgress';
+import Skeleton from '@mui/material/Skeleton';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 
@@ -114,7 +114,11 @@ export default function WordContainer({
       >
         <Box>
           {locked &&
-            <CircularProgress color="inherit" />
+            <>
+              <Skeleton animation="wave" variant="text" width={300} height={40} />
+              <Skeleton animation="wave" variant="text" width={300} height={40} />
+              <Skeleton animation="wave" variant="text" width={300} height={40} />
+            </>
           }
           {!locked &&
             <Fade in={!locked} timeout={500}>

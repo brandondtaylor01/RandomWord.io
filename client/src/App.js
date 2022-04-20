@@ -1,10 +1,12 @@
 import React, { useState, useMemo } from "react";
 import { ThemeProvider } from "@emotion/react";
-import { Box, CssBaseline, Drawer, List, ListItem, Typography } from "@mui/material";
+import { Box, CssBaseline, Divider, Drawer, Typography } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { CookiesProvider } from 'react-cookie';
 import Toolbar from "./Components/Toolbar";
 import WordContainer from './Components/WordContainer';
+import SearchSuggestion from "./Components/SearchSuggestion";
+import Definitions from "./Components/Definitions";
 
 function App() {
   const [themeMode, setThemeMode] = useState('dark');
@@ -25,7 +27,7 @@ function App() {
           default: '#212121'
         },
         primary: {
-          main: '#333f4d',
+          main: '#fff',
         }
       }
     }
@@ -105,46 +107,23 @@ function App() {
 
           {/* If we have a definition to show */
             typeof definition.word !== 'undefined' &&
-            <Box sx={{width: '100%', maxWidth: '1200px', maxHeight: '50vh', margin: 'auto'}}>
-              <Box sx={{textAlign: 'center'}}>
-                <Typography variant='h2'>{capitalize(word)}</Typography>
-              </Box>
+              <Box sx={{maxWidth: '800px', maxHeight: '50vh', margin: 'auto', padding: '8px'}}>
+                <Box sx={{textAlign: 'center'}}>
+                  <Typography variant='h2' sx={{fontSize: 'calc(3vw + 2.5vh + 0vmin)', cursor: 'pointer'}}>{capitalize(word)}</Typography>
+                </Box>
 
-              <Box>
-              {
-                definition.meanings.map((def, index) => {
-                  return(
-                    <Box key={index} sx={{display: 'flex', flexDirection: 'row', marginBottom: '32px'}}>
-                      <Box sx={{width:'100%', maxWidth: '300px'}}>
-                        <Typography variant='h5'>{capitalize(def.partOfSpeech)}</Typography>
-                      </Box>
-
-                      <Box>
-                        <Typography variant='h5'>Definitions</Typography>
-                        <List>
-                          {
-                            def.definitions.map((def, index) => {
-                              return(
-                                <ListItem key={index} disableGutters dense>
-                                  {index+1}. {def.definition}
-                                </ListItem>
-                              )
-                            })
-                          }
-                        </List>
-                      </Box>
-                    </Box>
-                  )
-                })
-              }
+                <Definitions list={definition}  capitalize={capitalize} />
+                <Divider variant='middle' color='inherit'>Alternatively</Divider>
+                <SearchSuggestion word={word} />
               </Box>
-            </Box>
           }
 
           {
             definition === '' &&
-            <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100px'}}>
+            <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: '100px', padding: '8px'}}>
               <Typography variant="h5">No definition found for that word. Why not try another?</Typography>
+              <Divider variant='middle' color='inherit' />
+              <SearchSuggestion word={word} />
             </Box>
           }
         </Drawer>
