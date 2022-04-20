@@ -14,7 +14,7 @@ export default function SearchSuggestion({ word }) {
                 </ListItem>
 
                 <ListItem>
-                    <Link href={"https://bing.com.com/search?q=" + word} target='_blank' rel='noopener'>Bing</Link>
+                    <Link href={"https://bing.com/search?q=" + word} target='_blank' rel='noopener'>Bing</Link>
                 </ListItem>
             </List>
         </Box>
